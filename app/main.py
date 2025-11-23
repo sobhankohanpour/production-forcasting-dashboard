@@ -88,6 +88,16 @@ with upload_dataset:
             "It is structured to facilitate temporal analysis, regional comparisons, and trend observation across counties over time.",
             key="ND_historical_MCF_gas_produced_by_county",
             )
+        st.checkbox(
+            "North Dakota Cumulative Oil Production by Formation Through 2020", 
+            help="This dataset presents cumulative oil production in North Dakota by geological formation through December 2020. " \
+            "Each row represents a specific formation, reporting the total oil produced (in barrels), the percentage contribution of " \
+            "that formation to the overall production, and the number of wells associated with it. The dataset covers major formations " \
+            "such as Bakken, Three Forks, Madison, Red River, and others, as well as minor formations, providing a comprehensive overview of " \
+            "North Dakota’s oil production landscape. It is structured to facilitate comparative analysis across formations, evaluation of " \
+            "production contributions, and assessment of well counts relative to output over time.",
+            key="ND_cumulative_formation_2020",
+            )
         
 
 with data_eng_tab:
