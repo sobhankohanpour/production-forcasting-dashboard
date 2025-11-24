@@ -14,7 +14,6 @@ save_dir = os.path.join("data")
 # Ensure the folder exists
 os.makedirs(save_dir, exist_ok=True)
 
-
 home, upload_dataset, data_eng_tab, train_ml_model, prediction_tab = st.tabs([
     "🏠 Home", 
     "📁 Select/Upload Dataset", 
@@ -42,6 +41,12 @@ with home:
         "planning future operations, this dashboard provides actionable insights, intuitive " \
         "visualizations, and AI-powered predictions designed for real-world petroleum engineering workflows."
         )
+    
+dataset_1 = False
+dataset_2 = False
+dataset_3 = False
+dataset_4 = False
+
 with upload_dataset:
     st.info(
         """
@@ -49,16 +54,17 @@ with upload_dataset:
         or upload your own custom datasets to use with the models.
         """
     )
-    if st.toggle("I want to upload my dataset."):
-        st.info(
-            """
-            You can upload only `.xlsx` files.  
-            """
-        )
-        number_of_user_dataset = st.slider(
-            "Number of dataset(s)", min_value=1, max_value=50, value=1
-        )
-        st.write(f"You must upload {number_of_user_dataset} dataset(s).")
+
+    choice = st.radio(
+        "Choose one option:",
+        ["I want to upload my dataset.", "I want to select from the real-world datasets."]
+    )
+
+    if choice == "I want to upload my dataset.":
+        st.write("====================================================")
+        st.info("You can upload only `.xlsx` files.")
+        number_of_user_dataset = 1
+        st.write(f"You can only upload {number_of_user_dataset} dataset.")
 
         uploaded_files = []
         for i in range(number_of_user_dataset):
@@ -66,7 +72,7 @@ with upload_dataset:
                 f"Upload dataset #{i+1}", type=["xlsx"], key=f"dataset_{i}"
             )
             if uploaded_file:
-                uploaded_file.seek(0)  # reset file pointer
+                uploaded_file.seek(0)
                 df_uploaded_file = pd.read_excel(uploaded_file)
                 st.dataframe(df_uploaded_file)
 
@@ -75,91 +81,43 @@ with upload_dataset:
                 df_uploaded_file.to_excel(save_path, index=False)
                 st.success(f"Dataset #{i+1} saved.")
 
-    if st.toggle("I want to select from the real-word datasets."):
-        # 1️⃣ North Dakota Natural Gas Production
-        st.checkbox("North Dakota Natural Gas Production", key="ND_gas_1990_to_present")
-        with st.expander("📝 Dataset description"):
-            st.markdown("""
-            <div style="
-                background-color:#FF7043;  
-                color:black;               /* text color */
-                padding:10px;
-                border-radius:8px;
-                font-size:14px;
-                line-height:1.5;
-            ">
+    elif choice == "I want to select from the real-world datasets.":
+        st.write("====================================================")
+        dataset_names = [
+            "North Dakota Natural Gas Production",
+            "North Dakota Cumulative Oil Production by Formation Through 2020",
+            "North Dakota Historical Monthly Oil Production by County",
+            "North Dakota Historical MCF Gas Produced by County"
+        ]
+
+        selected_dataset = st.radio("Select a dataset:", dataset_names)
+
+        dataset_descriptions = {
+            "North Dakota Natural Gas Production": """
             This dataset comes from North Dakota and contains real-world data. 
             It includes monthly values for gas produced, sold, and flared, along with 
             additional measurements specific to the Bakken formation. Because the data reflects
             actual field-level reporting, it is suitable for analytics, forecasting, and operational studies.
-            </div>
-            """, unsafe_allow_html=True)
-
-        # 2️⃣ North Dakota Cumulative Oil Production by Formation Through 2020
-        st.checkbox(
-            "North Dakota Cumulative Oil Production by Formation Through 2020", 
-            key="ND_cumulative_formation_2020",
-        )
-        with st.expander("📝 Dataset description"):
-            st.markdown("""
-            <div style="
-                background-color:#FF7043;
-                color:black;
-                padding:10px;
-                border-radius:8px;
-                font-size:14px;
-                line-height:1.5;
-            ">
+            """,
+            "North Dakota Cumulative Oil Production by Formation Through 2020": """
             This dataset presents cumulative oil production in North Dakota by geological formation through December 2020. 
             Each row represents a specific formation, reporting the total oil produced (in barrels), the percentage contribution of 
             that formation to the overall production, and the number of wells associated with it. The dataset covers major formations 
             such as Bakken, Three Forks, Madison, Red River, and others, as well as minor formations, providing a comprehensive overview of 
             North Dakota’s oil production landscape. It is structured to facilitate comparative analysis across formations, evaluation of 
             production contributions, and assessment of well counts relative to output over time.
-            </div>
-            """, unsafe_allow_html=True)
-
-        # 3️⃣ North Dakota Historical Monthly Oil Production by County
-        st.checkbox(
-            "North Dakota Historical Monthly Oil Production by County (April 1951 – August 2025, Excluding Confidential Wells)", 
-            key="ND_historical_barrels_of_oil_produced_by_county",
-        )
-        with st.expander("📝 Dataset description"):
-            st.markdown("""
-            <div style="
-                background-color:#FF7043;
-                color:black;
-                padding:10px;
-                border-radius:8px;
-                font-size:14px;
-                line-height:1.5;
-            ">
+            """,
+            "North Dakota Historical Monthly Oil Production by County": """
             This dataset provides historical monthly oil production data in North Dakota, 
-            broken down by county, excluding confidential wells. 
-            The data spans from April 1951 to August 2025. Each row corresponds to a specific month, 
-            while each column represents a county, reporting the number of barrels of oil produced during 
-            that period. Counties included are Adams, Billings, Bottineau, Bowman, Burke, Divide, Dunn, 
+            broken down by county, excluding confidential wells. The data spans from April 1951 to August 2025. 
+            Each row corresponds to a specific month, while each column represents a county, reporting the number of 
+            barrels of oil produced during that period. 
+            Counties included are Adams, Billings, Bottineau, Bowman, Burke, Divide, Dunn, 
             Golden Valley, Hettinger, McHenry, McKenzie, McLean, Mercer, Mountrail, Renville, Slope, 
             Stark, Ward, and Williams. The dataset is structured to facilitate temporal analysis, 
             county-level comparisons, and trend assessment of oil production across North Dakota over time.
-            </div>
-            """, unsafe_allow_html=True)
-
-        # 4️⃣ North Dakota Historical MCF Gas Produced by County
-        st.checkbox(
-            "North Dakota Historical MCF Gas Produced by County (January 1990 – August 2025, Excluding Confidential Wells)", 
-            key="ND_historical_MCF_gas_produced_by_county",
-        )
-        with st.expander("📝 Dataset description"):
-            st.markdown("""
-            <div style="
-                background-color:#FF7043;
-                color:black;
-                padding:10px;
-                border-radius:8px;
-                font-size:14px;
-                line-height:1.5;
-            ">
+            """,
+            "North Dakota Historical MCF Gas Produced by County": """
             This dataset provides monthly numerical data for multiple North Dakota counties, 
             including Adams, Billings, Bottineau, Bowman, Burke, Divide, Dunn, Golden Valley, Hettinger, 
             McHenry, McKenzie, McLean, Mercer, Mountrail, Renville, Slope, Stark, Ward, and Williams, 
@@ -168,12 +126,46 @@ with upload_dataset:
             The dataset captures quantitative metrics for each county, which could represent population, 
             production, or another county-level measure. 
             It is structured to facilitate temporal analysis, regional comparisons, and trend observation across counties over time.
-            </div>
-            """, unsafe_allow_html=True)
+            """
+        }
+
+        st.markdown(f"""
+        <div style="
+            color:black;
+            padding:15px;
+            border-radius:8px;
+            font-size:14px;
+            line-height:1.5;
+            max-height:350px;
+            overflow-y:auto;
+        ">
+            {dataset_descriptions[selected_dataset]}
+        </div>
+        """, unsafe_allow_html=True)
 
         
 with data_eng_tab:
-    st.info("Here, you can visualize and process your selected dataset(s) before training your model.")
+    st.info("Here, you can visualize and process your selected dataset before training your model.")
+
+    # Map dataset labels to their checkbox states
+    selected_datasets = {
+        "North Dakota Natural Gas Production": dataset_1,
+        "North Dakota Cumulative Oil Production by Formation Through 2020": dataset_2,
+        "North Dakota Historical Monthly Oil Production by County": dataset_3,
+        "North Dakota Historical MCF Gas Produced by County": dataset_4
+    }
+
+    # Loop through and display the selected dataset(s)
+    any_selected = False
+    for name, checked in selected_datasets.items():
+        if checked:
+            st.write(f"You selected: {name}")
+            any_selected = True
+            break  # Remove this if you want to allow multiple selections
+
+    if not any_selected:
+        st.write("No dataset selected yet.")
+
 
 with train_ml_model:
     st.info(
