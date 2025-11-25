@@ -7,7 +7,10 @@ import streamlit as st
 # Add the project root to sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from src.plots import scatterplot
+from src.plots import (
+    scatterplot, lineplot, distplot, histplot, kdeplot, ecdfplot, rugplot,
+    catplot, stripplot, swarmplot, boxplot, violinplot, pointplot, barplot
+)
 
 save_dir = os.path.join("data") 
 
@@ -166,21 +169,155 @@ with data_eng_tab:
     if not df_to_use.empty:
         st.write("Statistical description of your dataset:")
         st.dataframe(df_to_use.describe())
-        if st.toggle("Show Scatter Plot"):
+
+        # SCATTERPLOT
+        if st.toggle("Scatter Plot"):
             st.markdown("### Configure your scatter plot")
-
             df_columns = df_to_use.columns.tolist()
-
-            # Group the axis selectors side by side
             col1, col2 = st.columns(2)
             with col1:
-                x = st.radio("Select X‑axis column:", df_columns, index=0)
+                x = st.radio("Select X‑axis column:", df_columns, index=0, key="scatter_x")
             with col2:
-                y = st.radio("Select Y‑axis column:", df_columns, index=1)
-
+                y = st.radio("Select Y‑axis column:", df_columns, index=1, key="scatter_y")
             st.info(f"Plotting **{y}** vs **{x}**")
-
             scatterplot(df_to_use, x=x, y=y)
+
+        # LINEPLOT
+        if st.toggle("Line Plot"):
+            st.markdown("### Configure your line plot")
+            df_columns = df_to_use.columns.tolist()
+            col1, col2 = st.columns(2)
+            with col1:
+                x = st.radio("Select X‑axis column:", df_columns, index=0, key="line_x")
+            with col2:
+                y = st.radio("Select Y‑axis column:", df_columns, index=1, key="line_y")
+            st.info(f"Plotting **{y}** vs **{x}**")
+            lineplot(df_to_use, x=x, y=y)
+
+        # DISTPLOT
+        if st.toggle("Distribution Plot"):
+            st.markdown("### Configure your distribution plot")
+            df_columns = df_to_use.columns.tolist()
+            x = st.radio("Select column:", df_columns, index=0, key="dist_x")
+            st.info(f"Plotting distribution of **{x}**")
+            distplot(df_to_use, x=x)
+
+        # HISTPLOT
+        if st.toggle("Histogram"):
+            st.markdown("### Configure your histogram")
+            df_columns = df_to_use.columns.tolist()
+            x = st.radio("Select column:", df_columns, index=0, key="hist_x")
+            st.info(f"Plotting histogram of **{x}**")
+            bit_count_in_hist = st.slider("Number of bins", 5, 100, 10)
+            histplot(df_to_use, x=x, bins=bit_count_in_hist)
+
+        # KDEPLOT
+        if st.toggle("KDE Plot"):
+            st.markdown("### Configure your KDE plot")
+            df_columns = df_to_use.columns.tolist()
+            x = st.radio("Select column:", df_columns, index=0, key="kde_x")
+            st.info(f"Plotting KDE of **{x}**")
+            kdeplot(df_to_use, x=x)
+
+        # ECDFPLOT
+        if st.toggle("ECDF Plot"):
+            st.markdown("### Configure your ECDF plot")
+            df_columns = df_to_use.columns.tolist()
+            x = st.radio("Select column:", df_columns, index=0, key="ecdf_x")
+            st.info(f"Plotting ECDF of **{x}**")
+            ecdfplot(df_to_use, x=x)
+
+        # RUGPLOT
+        if st.toggle("Rug Plot"):
+            st.markdown("### Configure your rug plot")
+            df_columns = df_to_use.columns.tolist()
+            x = st.radio("Select column:", df_columns, index=0, key="rug_x")
+            st.info(f"Plotting rug plot of **{x}**")
+            rugplot(df_to_use, x=x)
+
+        # CATPLOT
+        if st.toggle("Categorical Plot"):
+            st.markdown("### Configure your categorical plot")
+            df_columns = df_to_use.columns.tolist()
+            col1, col2 = st.columns(2)
+            with col1:
+                x = st.radio("Select X‑axis column:", df_columns, index=0, key="cat_x")
+            with col2:
+                y = st.radio("Select Y‑axis column:", df_columns, index=1, key="cat_y")
+            st.info(f"Plotting categorical **{y}** vs **{x}**")
+            catplot(df_to_use, x=x, y=y, kind="box")
+
+        # STRIPPLOT
+        if st.toggle("Strip Plot"):
+            st.markdown("### Configure your strip plot")
+            df_columns = df_to_use.columns.tolist()
+            col1, col2 = st.columns(2)
+            with col1:
+                x = st.radio("Select X‑axis column:", df_columns, index=0, key="strip_x")
+            with col2:
+                y = st.radio("Select Y‑axis column:", df_columns, index=1, key="strip_y")
+            st.info(f"Plotting strip **{y}** vs **{x}**")
+            stripplot(df_to_use, x=x, y=y)
+
+        # SWARMPLOT
+        if st.toggle("Swarm Plot"):
+            st.markdown("### Configure your swarm plot")
+            df_columns = df_to_use.columns.tolist()
+            col1, col2 = st.columns(2)
+            with col1:
+                x = st.radio("Select X‑axis column:", df_columns, index=0, key="swarm_x")
+            with col2:
+                y = st.radio("Select Y‑axis column:", df_columns, index=1, key="swarm_y")
+            st.info(f"Plotting swarm **{y}** vs **{x}**")
+            swarmplot(df_to_use, x=x, y=y)
+
+        # BOXPLOT
+        if st.toggle("Box Plot"):
+            st.markdown("### Configure your box plot")
+            df_columns = df_to_use.columns.tolist()
+            col1, col2 = st.columns(2)
+            with col1:
+                x = st.radio("Select X‑axis column:", df_columns, index=0, key="box_x")
+            with col2:
+                y = st.radio("Select Y‑axis column:", df_columns, index=1, key="box_y")
+            st.info(f"Plotting box **{y}** vs **{x}**")
+            boxplot(df_to_use, x=x, y=y)
+
+        # VIOLINPLOT
+        if st.toggle("Violin Plot"):
+            st.markdown("### Configure your violin plot")
+            df_columns = df_to_use.columns.tolist()
+            col1, col2 = st.columns(2)
+            with col1:
+                x = st.radio("Select X‑axis column:", df_columns, index=0, key="violin_x")
+            with col2:
+                y = st.radio("Select Y‑axis column:", df_columns, index=1, key="violin_y")
+            st.info(f"Plotting violin **{y}** vs **{x}**")
+            violinplot(df_to_use, x=x, y=y)
+
+        # POINTPLOT
+        if st.toggle("Point Plot"):
+            st.markdown("### Configure your point plot")
+            df_columns = df_to_use.columns.tolist()
+            col1, col2 = st.columns(2)
+            with col1:
+                x = st.radio("Select X‑axis column:", df_columns, index=0, key="point_x")
+            with col2:
+                y = st.radio("Select Y‑axis column:", df_columns, index=1, key="point_y")
+            st.info(f"Plotting point **{y}** vs **{x}**")
+            pointplot(df_to_use, x=x, y=y)
+
+        # BARPLOT
+        if st.toggle("Bar Plot"):
+            st.markdown("### Configure your bar plot")
+            df_columns = df_to_use.columns.tolist()
+            col1, col2 = st.columns(2)
+            with col1:
+                x = st.radio("Select X‑axis column:", df_columns, index=0, key="bar_x")
+            with col2:
+                y = st.radio("Select Y‑axis column:", df_columns, index=1, key="bar_y")
+            st.info(f"Plotting bar **{y}** vs **{x}**")
+            barplot(df_to_use, x=x, y=y)
 
 
 with train_ml_model:
