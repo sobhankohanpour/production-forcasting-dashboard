@@ -166,6 +166,11 @@ with data_eng_tab:
     if not df_to_use.empty:
         st.write("Statistical description of your dataset:")
         st.dataframe(df_to_use.describe())
+        if st.toggle("scatterplot"):
+            df_columns = df_to_use.columns.tolist()
+            x = st.radio("x axis:", df_columns)
+            y = st.radio("y axis:", df_columns)
+            scatterplot(df_to_use, x, y)
 
 
 with train_ml_model:
