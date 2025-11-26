@@ -44,9 +44,12 @@ production-forecasting-dashboard/
 ├── src/
 │   └── plots.py                    # All plot functions (sns + matplotlib)
 │
+├── strings/
+│   └── strings.py                  # String constants for UI texts, descriptions, and messages
+│
 ├── .gitignore
 └── README.md
-└── requirements.txt
+└── requirements.txt                # Python dependencies
 ```
 
 ---
