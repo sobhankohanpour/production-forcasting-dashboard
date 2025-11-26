@@ -7,6 +7,7 @@ import streamlit as st
 # Add the project root to sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+
 from src.plots import (
     barplot,
     boxplot,
@@ -388,7 +389,48 @@ with train_ml_model:
         "configure the hyperparameters, and monitor the training process to achieve " \
         "the best performance."
         )
-    st.success("🚀 Coming Soon...")
+    if not df_to_use.empty:
+
+        st.subheader("🌲 Train CART Decision Tree Model")
+
+        # Select target column
+        target_column = st.selectbox("Select target column:", df_to_use.columns)
+
+        # Model type classification/regression
+        model_type = st.radio("Model Type:", ["classification", "regression"])
+
+        # Hyperparameters
+        st.markdown("### ⚙ Hyperparameters")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            max_depth = st.number_input("Max Depth (None = auto)", min_value=1, value=5)
+        with col2:
+            min_samples_split = st.number_input("Min Samples Split", min_value=2, value=2)
+        with col3:
+            test_size = st.slider("Test Size %", 5, 40, 20) / 100
+
+        criterion = "gini" if model_type == "classification" else "squared_error"
+
+        # Train button
+        if st.button("🚀 Train Decision Tree Model"):
+            from src.model import train_cart_decision_tree, save_model
+
+            model, metrics = train_cart_decision_tree(
+                df=df_to_use,
+                target_column=target_column,
+                model_type=model_type,
+                test_size=test_size,
+                max_depth=max_depth,
+                min_samples_split=min_samples_split,
+                criterion=criterion
+            )
+
+            st.success("🎉 Model trained successfully!")
+            st.info(f"📈 Performance → {metrics}")
+
+            if st.button("💾 Save Model"):
+                path = save_model(model)
+                st.success(f"Model saved to: `{path}`")
 
 with prediction_tab:
     st.info("Here, you can predict based on the trained model.")
