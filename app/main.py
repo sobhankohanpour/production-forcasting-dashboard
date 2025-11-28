@@ -47,6 +47,11 @@ save_dir = os.path.join("data")
 # Ensure the folder exists
 os.makedirs(save_dir, exist_ok=True)
 
+dataset_1 = False
+dataset_2 = False
+dataset_3 = False
+dataset_4 = False
+
 home, upload_dataset, data_eng_tab, train_ml_model, prediction_tab = st.tabs([
     "🏠 Home", 
     "📁 Select/Upload Dataset", 
@@ -55,17 +60,14 @@ home, upload_dataset, data_eng_tab, train_ml_model, prediction_tab = st.tabs([
     "🔮 Prediction"
 ])
 
+
 with home:
     st.title("Welcome to Well Production Forecasting Dashboard 🛢️📈")
     st.write(WELCOME_MESSAGE)
     st.write(PLATFORM_DESCRIPTION)
     st.write(UPLOAD_INSTRUCTION)
     st.write(WORKFLOW_SUPPORT_MESSAGE)
-    
-dataset_1 = False
-dataset_2 = False
-dataset_3 = False
-dataset_4 = False
+
 
 with upload_dataset:
     st.info(UPLOAD_DATASET_INFO)
@@ -107,7 +109,6 @@ with upload_dataset:
 
         with st.expander("Dataset Description"):
             st.write(dataset_descriptions[selected_dataset])
-
 
 
 def load_default_dataset(name):
@@ -381,7 +382,6 @@ with data_eng_tab:
             st.success("✨ Preprocessing applied! You may now proceed to model training.")
 
 
-
 with train_ml_model:
     st.info(
         "Here, you can train machine learning models on the selected dataset, "
@@ -455,7 +455,6 @@ with train_ml_model:
                 min_samples_split=min_samples_split,
                 criterion=criterion
             )
-
 
             st.success("🎉 Model trained successfully!")
             st.info(f"📈 Performance → {metrics}")
